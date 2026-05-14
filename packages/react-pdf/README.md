@@ -42,7 +42,9 @@ React-PDF supports the latest versions of all major modern browsers.
 
 Browser compatibility for React-PDF primarily depends on PDF.js support. For details, refer to the [PDF.js documentation](https://github.com/mozilla/pdf.js/wiki/Frequently-Asked-Questions#faq-support).
 
-You may extend the list of supported browsers by providing additional polyfills (e.g. `Array.prototype.at`, `Promise.allSettled` or `Promise.withResolvers`) and configuring your bundler to transpile `pdfjs-dist`.
+You may extend the list of supported browsers by providing additional polyfills (e.g. `Array.prototype.at`, `Promise.allSettled` or `Promise.withResolvers`), configuring your bundler to transpile `pdfjs-dist`, and using [legacy PDF.js worker](#legacy-pdfjs-worker).
+
+Legacy PDF.js worker has been reported to support iOS 16.4 and newer. Older iOS versions may still fail to load PDF.js modules.
 
 #### React
 
@@ -135,6 +137,27 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 
 > [!WARNING]
 > The `workerSrc` must be set in the **same module** where you use React-PDF components (e.g., `<Document>`, `<Page>`). Setting it in a separate file like `main.tsx` and then importing React-PDF in another component may cause the default value to overwrite your custom setting due to module execution order. Always configure the worker in the file where you render the PDF components.
+
+#### Legacy PDF.js worker
+
+If you need to support older browsers, you may use legacy PDF.js worker. This is not a complete backwards-compatibility solution: you may still need additional polyfills and bundler transpilation.
+
+To do so, follow the instructions above, but replace `/build/` with `/legacy/build/` in PDF.js worker import path, for example:
+
+```diff
+ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+-  'pdfjs-dist/build/pdf.worker.min.mjs',
++  'pdfjs-dist/legacy/build/pdf.worker.min.mjs',
+   import.meta.url,
+ ).toString();
+```
+
+or:
+
+```diff
+-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
++pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`;
+```
 
 ### Usage
 
