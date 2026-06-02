@@ -21,7 +21,7 @@
     "react-pdf": "latest"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^6.0.1",
+    "@vitejs/plugin-react": "^6.0.2",
     "vite": "^8.0.16",
     "vite-plugin-static-copy": "^4.0.1"
   },
