@@ -19,6 +19,7 @@
 
 # Project-generated directories and files
 __screenshots__
+.vitest-attachments
 coverage
 dist
 node_modules

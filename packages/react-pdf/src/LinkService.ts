@@ -15,7 +15,6 @@
 import invariant from 'tiny-invariant';
 
 import type { PDFDocumentProxy } from 'pdfjs-dist';
-import type { IPDFLinkService } from 'pdfjs-dist/types/web/interfaces.js';
 import type {
   Dest,
   ExternalLinkRel,
@@ -31,7 +30,7 @@ type PDFViewer = {
   scrollPageIntoView: (args: ScrollPageIntoViewArgs) => void;
 };
 
-export default class LinkService implements IPDFLinkService {
+export default class LinkService {
   externalLinkEnabled: boolean;
   externalLinkRel?: ExternalLinkRel;
   externalLinkTarget?: ExternalLinkTarget;
@@ -192,8 +191,8 @@ export default class LinkService implements IPDFLinkService {
     // Intentionally empty
   }
 
-  executeSetOCGState(): void {
-    // Intentionally empty
+  executeSetOCGState(): Promise<void> {
+    return Promise.resolve();
   }
 
   isPageVisible(): boolean {

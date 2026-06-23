@@ -49,6 +49,7 @@ describe('TextLayer', () => {
   // Loaded page text items
   let desiredTextItems: TextContent['items'];
   let desiredTextItems2: TextContent['items'];
+  let desiredRenderedTextItemCount: number;
 
   beforeAll(async () => {
     const pdf = await pdfjs.getDocument({ data: pdfFile.arrayBuffer }).promise;
@@ -56,6 +57,15 @@ describe('TextLayer', () => {
     page = await pdf.getPage(1);
     const textContent = await page.getTextContent();
     desiredTextItems = textContent.items;
+
+    const layer = document.createElement('div');
+    const textLayer = new pdfjs.TextLayer({
+      container: layer,
+      textContentSource: page.streamTextContent({ includeMarkedContent: true }),
+      viewport: page.getViewport({ scale: 1 }),
+    });
+    await textLayer.render();
+    desiredRenderedTextItemCount = layer.querySelectorAll('[role="presentation"]').length;
 
     page2 = await pdf.getPage(2);
     const textContent2 = await page2.getTextContent();
@@ -150,7 +160,7 @@ describe('TextLayer', () => {
 
       const textItems = getTextItems(container);
 
-      expect(textItems).toHaveLength(desiredTextItems.length);
+      expect(textItems).toHaveLength(desiredRenderedTextItemCount);
     });
 
     it('renders text content properly given customTextRenderer', async () => {
@@ -171,7 +181,7 @@ describe('TextLayer', () => {
 
       const textItems = getTextItems(container);
 
-      expect(textItems).toHaveLength(desiredTextItems.length);
+      expect(textItems).toHaveLength(desiredRenderedTextItemCount);
     });
 
     it('maps textContent items to actual TextLayer children properly', async () => {
@@ -225,7 +235,7 @@ describe('TextLayer', () => {
 
       const textItems = getTextItems(container);
 
-      expect(textItems).toHaveLength(desiredTextItems.length);
+      expect(textItems).toHaveLength(desiredRenderedTextItemCount);
 
       expect(customTextRenderer).toHaveBeenCalledTimes(desiredTextItems.length);
       expect(customTextRenderer).toHaveBeenCalledWith(
