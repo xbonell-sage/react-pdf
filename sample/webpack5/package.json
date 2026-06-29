@@ -19,7 +19,7 @@
     "react-pdf": "latest"
   },
   "devDependencies": {
-    "@babel/core": "^7.29.0",
+    "@babel/core": "^7.29.6",
     "@babel/preset-env": "^7.29.5",
     "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.28.5",
@@ -33,7 +33,7 @@
     "typescript": "^6.0.2",
     "webpack": "^5.104.1",
     "webpack-cli": "^5.0.0",
-    "webpack-dev-server": "^5.2.4"
+    "webpack-dev-server": "^5.2.5"
   },
   "packageManager": "yarn@4.14.1"
 }

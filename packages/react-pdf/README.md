@@ -92,7 +92,18 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 > In Next.js, make sure to skip SSR when importing the module you're using this code in. Here's how to do this in [Pages Router](https://nextjs.org/docs/pages/guides/lazy-loading#with-no-ssr) and [App Router](https://nextjs.org/docs/app/guides/lazy-loading#skipping-ssr).
 
 > [!NOTE]
-> pnpm requires an `.npmrc` file with `public-hoist-pattern[]=pdfjs-dist` for this to work.
+> pnpm users may need to hoist `pdfjs-dist` for this setup to work:
+>
+> **pnpm < 11** — add this to `.npmrc`:
+> ```ini
+> public-hoist-pattern[]=pdfjs-dist
+> ```
+>
+> **pnpm 11+** — add this to `pnpm-workspace.yaml`:
+> ```yaml
+> publicHoistPattern:
+>   - pdfjs-dist
+> ```
 
 <details>
 <summary>See more examples</summary>
