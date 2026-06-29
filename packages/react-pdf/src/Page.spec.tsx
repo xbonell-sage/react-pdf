@@ -57,7 +57,7 @@ describe('Page', () => {
   let pdf4: PDFDocumentProxy;
   let pdf5: PDFDocumentProxy;
 
-  // Object with basic loaded page information that shall match after successful loading
+  // Assert public callback fields, not PDF.js internal _page* properties.
   const desiredLoadedPage = { pageNumber: 1 };
   const desiredLoadedPage2 = { pageNumber: 2 };
   const desiredLoadedPage3 = { pageNumber: 1 };

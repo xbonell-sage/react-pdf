@@ -51,7 +51,7 @@ describe('Thumbnail', () => {
   let pdf: PDFDocumentProxy;
   let pdf2: PDFDocumentProxy;
 
-  // Object with basic loaded page information that shall match after successful loading
+  // Assert public callback fields, not PDF.js internal _page* properties.
   const desiredLoadedThumbnail = { pageNumber: 1 };
   const desiredLoadedThumbnail2 = { pageNumber: 2 };
   const desiredLoadedThumbnail3 = { pageNumber: 1 };

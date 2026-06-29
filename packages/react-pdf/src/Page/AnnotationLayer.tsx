@@ -14,7 +14,6 @@ import useResolver from '../shared/hooks/useResolver.js';
 import { cancelRunningTask } from '../shared/utils.js';
 
 import type { AnnotationLayerParameters } from 'pdfjs-dist/types/src/display/annotation_layer.js';
-import type { PDFLinkService } from 'pdfjs-dist/types/web/pdf_link_service.js';
 import type { Annotations } from '../shared/types.js';
 
 export default function AnnotationLayer(): React.ReactElement {
@@ -181,7 +180,7 @@ export default function AnnotationLayer(): React.ReactElement {
         annotationStorage: pdf.annotationStorage,
         div: layer,
         imageResourcesPath,
-        linkService: linkService as unknown as PDFLinkService,
+        linkService,
         page,
         renderForms,
         viewport: clonedViewport,
@@ -189,32 +188,14 @@ export default function AnnotationLayer(): React.ReactElement {
 
       layer.innerHTML = '';
 
-      let cancelled = false;
-
       const cancellable = makeCancellable(
-        new pdfjs.AnnotationLayer({
-          ...annotationLayerParameters,
-          linkService: linkService as unknown as PDFLinkService,
-        }).render(renderParameters),
+        new pdfjs.AnnotationLayer(annotationLayerParameters).render(renderParameters),
       );
       const runningTask = cancellable;
 
-      cancellable.promise
-        .then(() => {
-          if (!cancelled) {
-            onRenderSuccess();
-          }
-        })
-        .catch((error) => {
-          if (!cancelled) {
-            onRenderError(error);
-          }
-        });
+      cancellable.promise.then(onRenderSuccess).catch(onRenderError);
 
-      return () => {
-        cancelled = true;
-        cancelRunningTask(runningTask);
-      };
+      return () => cancelRunningTask(runningTask);
     },
     [
       annotations,

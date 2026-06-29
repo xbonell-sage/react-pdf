@@ -41,6 +41,22 @@ function getTextItems(container: HTMLElement) {
   return wrapper.querySelectorAll('[role="presentation"]');
 }
 
+/**
+ * PDF.js 6 may render more `[role="presentation"]` nodes than `textContent.items.length`
+ * when marked content is included.
+ */
+async function getRenderedTextItemCount(page: PDFPageProxy): Promise<number> {
+  const layer = document.createElement('div');
+  const textLayer = new pdfjs.TextLayer({
+    container: layer,
+    textContentSource: page.streamTextContent({ includeMarkedContent: true }),
+    viewport: page.getViewport({ scale: 1 }),
+  });
+  await textLayer.render();
+
+  return layer.querySelectorAll('[role="presentation"]').length;
+}
+
 describe('TextLayer', () => {
   // Loaded page
   let page: PDFPageProxy;
@@ -58,14 +74,7 @@ describe('TextLayer', () => {
     const textContent = await page.getTextContent();
     desiredTextItems = textContent.items;
 
-    const layer = document.createElement('div');
-    const textLayer = new pdfjs.TextLayer({
-      container: layer,
-      textContentSource: page.streamTextContent({ includeMarkedContent: true }),
-      viewport: page.getViewport({ scale: 1 }),
-    });
-    await textLayer.render();
-    desiredRenderedTextItemCount = layer.querySelectorAll('[role="presentation"]').length;
+    desiredRenderedTextItemCount = await getRenderedTextItemCount(page);
 
     page2 = await pdf.getPage(2);
     const textContent2 = await page2.getTextContent();

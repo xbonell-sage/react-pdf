@@ -46,7 +46,7 @@ async function waitForAsync() {
 }
 
 describe('Document', () => {
-  // Object with basic loaded PDF information that shall match after successful loading
+  // Assert public callback fields, not PDF.js internal _pdfInfo properties.
   const desiredLoadedPdf = { numPages: 4 };
   const desiredLoadedPdf2 = { numPages: 5 };
 
